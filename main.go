@@ -1,4 +1,9 @@
+//Executes the program
+
+// Declares the package name
 package main
+
+//Imports packages required for it to work
 
 import (
 	"fmt"
@@ -7,6 +12,7 @@ import (
 	"github.com/Idespair/monitor/hardware"
 )
 
+// Starts the main function
 func main() {
 	fmt.Println("Starting system monitor..")
 
@@ -17,9 +23,21 @@ func main() {
 				fmt.Println(err)
 			}
 
-			fmt.Println(systemSection)
+			cpuSection, err := hardware.GetCpuSection()
+			if err != nil {
+				fmt.Println(err)
+			}
 
-			time.Sleep(3 * time.Second)
+			diskSection, err := hardware.GetDiskSection()
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			fmt.Println(systemSection)
+			fmt.Println(cpuSection)
+			fmt.Println(diskSection)
+
+			time.Sleep(1 * time.Minute)
 		}
 	}()
 
