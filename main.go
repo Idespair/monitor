@@ -7,10 +7,27 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"os"
 	"time"
 
 	"github.com/Idespair/monitor/hardware"
 )
+
+type server struct {
+	subscriberMessageBuffer int
+	mux                     http.ServeMux
+}
+
+func NewServer() *server {
+	s := &server{
+		subscriberMessageBuffer: 10,
+	}
+
+	s.mux.Handle("/", http.FileServer(http.Dir("./htmx")))
+
+	return s
+}
 
 // Starts the main function
 func main() {
@@ -41,5 +58,12 @@ func main() {
 		}
 	}()
 
-	time.Sleep(5 * time.Minute)
+	srv := NewServer()
+	err := http.ListenAndServe(":8080", &srv.mux)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 }
